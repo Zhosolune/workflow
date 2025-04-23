@@ -279,8 +279,21 @@ class WorkflowEngine:
                 # 检查源模块是否已执行并有输出数据
                 if source_module_id in self._execution_results:
                     source_outputs = self._execution_results[source_module_id]
+                    
+                    # 直接处理条件判断模块的输出
                     if source_port_id in source_outputs:
+                        # 直接返回该端口的输出值
                         return source_outputs[source_port_id]
+                    # 如果是ConditionalModule输出，根据端口名称返回对应数据
+                    elif "true_result" in source_outputs and "false_result" in source_outputs:
+                        # 获取源模块
+                        source_module = workflow._modules.get(source_module_id)
+                        if source_module:
+                            # 查找对应的输出端口名称
+                            for port_id, port in source_module.output_ports.items():
+                                if port_id == source_port_id:
+                                    # 根据端口名称获取对应的结果
+                                    return source_outputs
                     elif isinstance(source_outputs, dict) and len(source_outputs) == 1:
                         # 如果只有一个输出，且端口ID不匹配，可能是因为模块使用不同的输出命名方式
                         return next(iter(source_outputs.values()))
@@ -357,6 +370,8 @@ class WorkflowEngine:
                     # 查找连接的数据源
                     source_data = self._get_source_data(workflow, module_id, port_id)
                     if source_data is not None:
+                        # 记录源数据到日志，帮助调试
+                        glogger.info(f"为模块 '{module.name}' 的输入端口 '{port_id}' 找到数据: {source_data}")
                         inputs[port_id] = source_data
                 
                 # 记录输入数据日志

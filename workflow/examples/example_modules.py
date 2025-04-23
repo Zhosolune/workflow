@@ -196,8 +196,16 @@ class TextProcessingModule(BaseModule):
         
         # 特殊处理条件判断输出
         if isinstance(text, dict):
+            # 检查是否直接收到条件模块的完整输出
+            if "true_result" in text and "false_result" in text:
+                # 优先使用false_result（假设条件模块的false分支连接到此）
+                if text["false_result"] is not None:
+                    text = text["false_result"]
+                # 如果false_result为None，尝试使用true_result
+                elif text["true_result"] is not None:
+                    text = text["true_result"]
             # 从条件判断的false_result中获取数据
-            if "false_result" in text:
+            elif "false_result" in text:
                 text = text["false_result"]
             # 从条件判断的true_result中获取数据
             elif "true_result" in text:
@@ -390,12 +398,27 @@ class TimeDelayModule(BaseModule):
         
         # 特殊处理条件判断输出
         if isinstance(input_value, dict):
+            # 检查是否直接收到条件模块的完整输出
+            if "true_result" in input_value and "false_result" in input_value:
+                # 优先使用true_result（假设条件模块的true分支连接到此）
+                if input_value["true_result"] is not None:
+                    input_value = input_value["true_result"]
+                # 如果true_result为None，尝试使用false_result
+                elif input_value["false_result"] is not None:
+                    input_value = input_value["false_result"]
             # 从条件判断的true_result中获取数据
-            if "true_result" in input_value:
+            elif "true_result" in input_value:
                 input_value = input_value["true_result"]
             # 从条件判断的false_result中获取数据
             elif "false_result" in input_value:
                 input_value = input_value["false_result"]
+            # 尝试从其他常见字段获取数据
+            elif "number" in input_value:
+                input_value = input_value["number"]
+            elif "result" in input_value:
+                input_value = input_value["result"]
+            elif "output" in input_value:
+                input_value = input_value["output"]
         
         # 获取延迟时间
         delay_seconds = self.get_parameter("delay_seconds")

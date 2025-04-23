@@ -118,8 +118,30 @@ def create_example_workflow() -> Workflow:
     text_in_port_id = list(text_proc.input_ports.keys())[0]
     workflow.connect(condition.id, cond_false_port_id, text_proc.id, text_in_port_id)
     
+    # 打印连接详情以便调试
+    print("\n详细连接信息:")
+    for conn_id, conn in workflow._connections.items():
+        source_module = workflow._modules[conn.source_module_id]
+        target_module = workflow._modules[conn.target_module_id]
+        source_port_name = "未知"
+        target_port_name = "未知"
+        
+        # 获取源端口名称
+        for port_id, port in source_module.output_ports.items():
+            if port_id == conn.source_port_id:
+                source_port_name = port.name
+                
+        # 获取目标端口名称
+        for port_id, port in target_module.input_ports.items():
+            if port_id == conn.target_port_id:
+                target_port_name = port.name
+                
+        print(f"连接: {source_module.name}.{source_port_name} -> {target_module.name}.{target_port_name}")
+        print(f"  源端口ID: {conn.source_port_id}")
+        print(f"  目标端口ID: {conn.target_port_id}")
+    
     # 7. 记录所有连接的信息，用于调试
-    print("工作流连接信息:")
+    print("\n工作流连接信息:")
     for conn_id, conn in workflow._connections.items():
         source_module = workflow._modules[conn.source_module_id].name
         target_module = workflow._modules[conn.target_module_id].name

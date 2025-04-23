@@ -1,21 +1,21 @@
 {
-  "id": "0c49ac47-c656-4dc1-b5eb-0556d6e7111b",
+  "id": "5b70ca26-ceb2-4272-85f0-9075b0d3479c",
   "name": "示例工作流",
   "description": "这是一个演示工作流系统功能的示例",
   "modules": {
-    "14ee5297-d23e-4e75-95f6-d8470b1be5e4": {
-      "id": "14ee5297-d23e-4e75-95f6-d8470b1be5e4",
+    "4dc6c302-9dc1-452e-8247-a590e4f9c6e7": {
+      "id": "4dc6c302-9dc1-452e-8247-a590e4f9c6e7",
       "name": "随机数生成器1",
       "description": "生成随机数",
       "input_ports": {},
       "output_ports": {
-        "9b326837-69e8-4523-b5eb-08f2814b449b": {
-          "id": "9b326837-69e8-4523-b5eb-08f2814b449b",
+        "eb8a4611-8a76-452c-9d0a-f1e8518084ff": {
+          "id": "eb8a4611-8a76-452c-9d0a-f1e8518084ff",
           "name": "number",
           "type": "number",
           "description": "生成的随机数",
           "connected_to": [
-            "a16f6d67-d079-4f67-86bd-ffee36dfdf4d"
+            "50ba3351-f4cd-44ae-a289-3f6252b2a239"
           ]
         }
       },
@@ -29,19 +29,19 @@
       ],
       "execution_status": "idle"
     },
-    "f39bc151-c6fe-4fe3-a046-ee7d7b55e82c": {
-      "id": "f39bc151-c6fe-4fe3-a046-ee7d7b55e82c",
+    "10355742-0253-4deb-a48d-7bb24ab626b9": {
+      "id": "10355742-0253-4deb-a48d-7bb24ab626b9",
       "name": "随机数生成器2",
       "description": "生成随机数",
       "input_ports": {},
       "output_ports": {
-        "fd180aa9-6b33-40a6-a1ed-7b09d7c2abc2": {
-          "id": "fd180aa9-6b33-40a6-a1ed-7b09d7c2abc2",
+        "1ec479b7-0634-4993-a457-49f4d6eaec8b": {
+          "id": "1ec479b7-0634-4993-a457-49f4d6eaec8b",
           "name": "number",
           "type": "number",
           "description": "生成的随机数",
           "connected_to": [
-            "01740249-9e4a-4be9-b1e6-7702327ab74e"
+            "ac481889-0766-475f-8e0a-e5003d6c0a2e"
           ]
         }
       },
@@ -55,38 +55,38 @@
       ],
       "execution_status": "idle"
     },
-    "51310079-eedf-478c-af10-46380feeed32": {
-      "id": "51310079-eedf-478c-af10-46380feeed32",
+    "549712a7-cf0c-4e3c-8eea-7d448ac8eabd": {
+      "id": "549712a7-cf0c-4e3c-8eea-7d448ac8eabd",
       "name": "加法运算",
       "description": "执行数学运算",
       "input_ports": {
-        "a16f6d67-d079-4f67-86bd-ffee36dfdf4d": {
-          "id": "a16f6d67-d079-4f67-86bd-ffee36dfdf4d",
+        "50ba3351-f4cd-44ae-a289-3f6252b2a239": {
+          "id": "50ba3351-f4cd-44ae-a289-3f6252b2a239",
           "name": "number1",
           "type": "number",
           "description": "第一个数字",
           "connected_to": [
-            "9b326837-69e8-4523-b5eb-08f2814b449b"
+            "eb8a4611-8a76-452c-9d0a-f1e8518084ff"
           ]
         },
-        "01740249-9e4a-4be9-b1e6-7702327ab74e": {
-          "id": "01740249-9e4a-4be9-b1e6-7702327ab74e",
+        "ac481889-0766-475f-8e0a-e5003d6c0a2e": {
+          "id": "ac481889-0766-475f-8e0a-e5003d6c0a2e",
           "name": "number2",
           "type": "number",
           "description": "第二个数字",
           "connected_to": [
-            "fd180aa9-6b33-40a6-a1ed-7b09d7c2abc2"
+            "1ec479b7-0634-4993-a457-49f4d6eaec8b"
           ]
         }
       },
       "output_ports": {
-        "c45fb912-cbd8-417f-8d38-33dccb7f5a1e": {
-          "id": "c45fb912-cbd8-417f-8d38-33dccb7f5a1e",
+        "eb3ab244-c2c3-4a76-b4f6-da06349b85f6": {
+          "id": "eb3ab244-c2c3-4a76-b4f6-da06349b85f6",
           "name": "result",
           "type": "number",
           "description": "运算结果",
           "connected_to": [
-            "b0ecb1ce-8e53-4a88-839c-bf59ecfcac83"
+            "308bcdc2-c46f-43ab-a216-4f6736ae05d6"
           ]
         }
       },
@@ -99,19 +99,19 @@
       ],
       "execution_status": "idle"
     },
-    "46a1713d-1d80-4e60-8da1-3be161b8f9da": {
-      "id": "46a1713d-1d80-4e60-8da1-3be161b8f9da",
+    "75a70eb1-00a3-4efa-b0b6-3026ce450d92": {
+      "id": "75a70eb1-00a3-4efa-b0b6-3026ce450d92",
       "name": "阈值生成器",
       "description": "生成随机数",
       "input_ports": {},
       "output_ports": {
-        "fe09838a-bbc5-4e1d-90c9-1d32648802d0": {
-          "id": "fe09838a-bbc5-4e1d-90c9-1d32648802d0",
+        "b8c10655-787f-4097-915c-bd604d6f8048": {
+          "id": "b8c10655-787f-4097-915c-bd604d6f8048",
           "name": "number",
           "type": "number",
           "description": "生成的随机数",
           "connected_to": [
-            "6cc41a76-d840-462d-8f28-d4e13ee39531"
+            "67660162-9df2-4417-a8ce-06420bac2ec7"
           ]
         }
       },
@@ -125,42 +125,42 @@
       ],
       "execution_status": "idle"
     },
-    "4cf74dee-b013-4189-b989-f516f35633c4": {
-      "id": "4cf74dee-b013-4189-b989-f516f35633c4",
+    "ece7218c-1934-4617-a09f-fae87730d207": {
+      "id": "ece7218c-1934-4617-a09f-fae87730d207",
       "name": "条件判断",
       "description": "条件判断",
       "input_ports": {
-        "b0ecb1ce-8e53-4a88-839c-bf59ecfcac83": {
-          "id": "b0ecb1ce-8e53-4a88-839c-bf59ecfcac83",
+        "308bcdc2-c46f-43ab-a216-4f6736ae05d6": {
+          "id": "308bcdc2-c46f-43ab-a216-4f6736ae05d6",
           "name": "value",
           "type": "number",
           "description": "要判断的值",
           "connected_to": [
-            "c45fb912-cbd8-417f-8d38-33dccb7f5a1e"
+            "eb3ab244-c2c3-4a76-b4f6-da06349b85f6"
           ]
         },
-        "6cc41a76-d840-462d-8f28-d4e13ee39531": {
-          "id": "6cc41a76-d840-462d-8f28-d4e13ee39531",
+        "67660162-9df2-4417-a8ce-06420bac2ec7": {
+          "id": "67660162-9df2-4417-a8ce-06420bac2ec7",
           "name": "threshold",
           "type": "number",
           "description": "阈值",
           "connected_to": [
-            "fe09838a-bbc5-4e1d-90c9-1d32648802d0"
+            "b8c10655-787f-4097-915c-bd604d6f8048"
           ]
         }
       },
       "output_ports": {
-        "3362f6b3-cdcd-495a-b0e1-a62b5306f725": {
-          "id": "3362f6b3-cdcd-495a-b0e1-a62b5306f725",
+        "1109d19a-f8d1-4883-8669-ccff49c7f65b": {
+          "id": "1109d19a-f8d1-4883-8669-ccff49c7f65b",
           "name": "true_result",
           "type": "any",
           "description": "条件为真时的结果",
           "connected_to": [
-            "3ee9a37e-09f4-457a-9a56-f18a34f59d33"
+            "c760f980-4778-4c74-a575-b16c9e5d2902"
           ]
         },
-        "b5b65e79-7d65-4db6-802e-b0362c412d53": {
-          "id": "b5b65e79-7d65-4db6-802e-b0362c412d53",
+        "5c8f30e5-cfd0-4f81-a778-c62d31bf51d7": {
+          "id": "5c8f30e5-cfd0-4f81-a778-c62d31bf51d7",
           "name": "false_result",
           "type": "any",
           "description": "条件为假时的结果",
@@ -176,24 +176,24 @@
       ],
       "execution_status": "idle"
     },
-    "6e594375-8c35-49b4-a026-f800d13451ad": {
-      "id": "6e594375-8c35-49b4-a026-f800d13451ad",
+    "d2e166de-63ed-4cbe-9ea6-8ed2925f619d": {
+      "id": "d2e166de-63ed-4cbe-9ea6-8ed2925f619d",
       "name": "延迟模块",
       "description": "延迟指定时间",
       "input_ports": {
-        "3ee9a37e-09f4-457a-9a56-f18a34f59d33": {
-          "id": "3ee9a37e-09f4-457a-9a56-f18a34f59d33",
+        "c760f980-4778-4c74-a575-b16c9e5d2902": {
+          "id": "c760f980-4778-4c74-a575-b16c9e5d2902",
           "name": "input",
           "type": "any",
           "description": "任意输入",
           "connected_to": [
-            "3362f6b3-cdcd-495a-b0e1-a62b5306f725"
+            "1109d19a-f8d1-4883-8669-ccff49c7f65b"
           ]
         }
       },
       "output_ports": {
-        "541f8c53-50fc-4f47-ad9c-64a215737f69": {
-          "id": "541f8c53-50fc-4f47-ad9c-64a215737f69",
+        "d14b468f-87d8-438f-ae8e-0c0051428a10": {
+          "id": "d14b468f-87d8-438f-ae8e-0c0051428a10",
           "name": "output",
           "type": "any",
           "description": "延迟后的输出",
@@ -209,13 +209,13 @@
       ],
       "execution_status": "idle"
     },
-    "16e1126e-cdd8-4c0e-88d9-586056271b00": {
-      "id": "16e1126e-cdd8-4c0e-88d9-586056271b00",
+    "5765b995-c1a2-4880-b905-ca45afb61e6e": {
+      "id": "5765b995-c1a2-4880-b905-ca45afb61e6e",
       "name": "文本处理",
       "description": "处理文本",
       "input_ports": {
-        "5e8812d8-c122-4daa-ab01-016129e36f99": {
-          "id": "5e8812d8-c122-4daa-ab01-016129e36f99",
+        "546a0730-57f5-4683-8a7d-b82cc7cbe49a": {
+          "id": "546a0730-57f5-4683-8a7d-b82cc7cbe49a",
           "name": "text",
           "type": "string",
           "description": "输入文本",
@@ -223,8 +223,8 @@
         }
       },
       "output_ports": {
-        "f9256d7a-7fa3-42f6-b510-94e926b262f5": {
-          "id": "f9256d7a-7fa3-42f6-b510-94e926b262f5",
+        "32f8ed99-51b0-4d2f-850b-458abb638ec9": {
+          "id": "32f8ed99-51b0-4d2f-850b-458abb638ec9",
           "name": "result",
           "type": "string",
           "description": "处理结果",
@@ -242,40 +242,40 @@
     }
   },
   "connections": {
-    "5ba8d361-1897-465b-bc4d-ad1917f62517": {
-      "id": "5ba8d361-1897-465b-bc4d-ad1917f62517",
-      "source_module_id": "14ee5297-d23e-4e75-95f6-d8470b1be5e4",
-      "source_port_id": "9b326837-69e8-4523-b5eb-08f2814b449b",
-      "target_module_id": "51310079-eedf-478c-af10-46380feeed32",
-      "target_port_id": "a16f6d67-d079-4f67-86bd-ffee36dfdf4d"
+    "89953547-ca2c-43cc-be39-99c3e33bf02b": {
+      "id": "89953547-ca2c-43cc-be39-99c3e33bf02b",
+      "source_module_id": "4dc6c302-9dc1-452e-8247-a590e4f9c6e7",
+      "source_port_id": "eb8a4611-8a76-452c-9d0a-f1e8518084ff",
+      "target_module_id": "549712a7-cf0c-4e3c-8eea-7d448ac8eabd",
+      "target_port_id": "50ba3351-f4cd-44ae-a289-3f6252b2a239"
     },
-    "bac264ac-ddcb-45a7-8f3d-b83a038d1c47": {
-      "id": "bac264ac-ddcb-45a7-8f3d-b83a038d1c47",
-      "source_module_id": "f39bc151-c6fe-4fe3-a046-ee7d7b55e82c",
-      "source_port_id": "fd180aa9-6b33-40a6-a1ed-7b09d7c2abc2",
-      "target_module_id": "51310079-eedf-478c-af10-46380feeed32",
-      "target_port_id": "01740249-9e4a-4be9-b1e6-7702327ab74e"
+    "f5b9861b-b660-4836-996d-4fdc94058e94": {
+      "id": "f5b9861b-b660-4836-996d-4fdc94058e94",
+      "source_module_id": "10355742-0253-4deb-a48d-7bb24ab626b9",
+      "source_port_id": "1ec479b7-0634-4993-a457-49f4d6eaec8b",
+      "target_module_id": "549712a7-cf0c-4e3c-8eea-7d448ac8eabd",
+      "target_port_id": "ac481889-0766-475f-8e0a-e5003d6c0a2e"
     },
-    "c21d95d7-4ed8-46dd-9ffc-97e8e2c2bf3f": {
-      "id": "c21d95d7-4ed8-46dd-9ffc-97e8e2c2bf3f",
-      "source_module_id": "51310079-eedf-478c-af10-46380feeed32",
-      "source_port_id": "c45fb912-cbd8-417f-8d38-33dccb7f5a1e",
-      "target_module_id": "4cf74dee-b013-4189-b989-f516f35633c4",
-      "target_port_id": "b0ecb1ce-8e53-4a88-839c-bf59ecfcac83"
+    "605b1ea7-64a0-4642-9cd0-e648d0d79735": {
+      "id": "605b1ea7-64a0-4642-9cd0-e648d0d79735",
+      "source_module_id": "549712a7-cf0c-4e3c-8eea-7d448ac8eabd",
+      "source_port_id": "eb3ab244-c2c3-4a76-b4f6-da06349b85f6",
+      "target_module_id": "ece7218c-1934-4617-a09f-fae87730d207",
+      "target_port_id": "308bcdc2-c46f-43ab-a216-4f6736ae05d6"
     },
-    "b4d6c7f4-b91a-4dc0-be79-97021ea95c55": {
-      "id": "b4d6c7f4-b91a-4dc0-be79-97021ea95c55",
-      "source_module_id": "46a1713d-1d80-4e60-8da1-3be161b8f9da",
-      "source_port_id": "fe09838a-bbc5-4e1d-90c9-1d32648802d0",
-      "target_module_id": "4cf74dee-b013-4189-b989-f516f35633c4",
-      "target_port_id": "6cc41a76-d840-462d-8f28-d4e13ee39531"
+    "6c4a9d89-9b61-408c-ac05-a47e3b052748": {
+      "id": "6c4a9d89-9b61-408c-ac05-a47e3b052748",
+      "source_module_id": "75a70eb1-00a3-4efa-b0b6-3026ce450d92",
+      "source_port_id": "b8c10655-787f-4097-915c-bd604d6f8048",
+      "target_module_id": "ece7218c-1934-4617-a09f-fae87730d207",
+      "target_port_id": "67660162-9df2-4417-a8ce-06420bac2ec7"
     },
-    "5e48a356-f5cb-4df6-a3dc-7bd9bc65063a": {
-      "id": "5e48a356-f5cb-4df6-a3dc-7bd9bc65063a",
-      "source_module_id": "4cf74dee-b013-4189-b989-f516f35633c4",
-      "source_port_id": "3362f6b3-cdcd-495a-b0e1-a62b5306f725",
-      "target_module_id": "6e594375-8c35-49b4-a026-f800d13451ad",
-      "target_port_id": "3ee9a37e-09f4-457a-9a56-f18a34f59d33"
+    "bca9ffed-6d62-4f67-bad1-25047d1e79db": {
+      "id": "bca9ffed-6d62-4f67-bad1-25047d1e79db",
+      "source_module_id": "ece7218c-1934-4617-a09f-fae87730d207",
+      "source_port_id": "1109d19a-f8d1-4883-8669-ccff49c7f65b",
+      "target_module_id": "d2e166de-63ed-4cbe-9ea6-8ed2925f619d",
+      "target_port_id": "c760f980-4778-4c74-a575-b16c9e5d2902"
     }
   }
 }
