@@ -257,6 +257,36 @@ class WorkflowEngine:
             self._execute_workflow()
             return True
     
+    def _get_source_data(self, workflow: Workflow, target_module_id: str, target_port_id: str) -> Any:
+        """
+        获取目标端口的数据源
+        
+        Args:
+            workflow: 工作流实例
+            target_module_id: 目标模块ID
+            target_port_id: 目标端口ID
+            
+        Returns:
+            数据源或None
+        """
+        # 查找连接到此输入端口的所有连接
+        for conn_id, conn in workflow._connections.items():
+            if conn.target_module_id == target_module_id and conn.target_port_id == target_port_id:
+                # 找到连接，获取源模块和源端口
+                source_module_id = conn.source_module_id
+                source_port_id = conn.source_port_id
+                
+                # 检查源模块是否已执行并有输出数据
+                if source_module_id in self._execution_results:
+                    source_outputs = self._execution_results[source_module_id]
+                    if source_port_id in source_outputs:
+                        return source_outputs[source_port_id]
+                    elif isinstance(source_outputs, dict) and len(source_outputs) == 1:
+                        # 如果只有一个输出，且端口ID不匹配，可能是因为模块使用不同的输出命名方式
+                        return next(iter(source_outputs.values()))
+        
+        return None
+    
     def _execute_workflow(self) -> None:
         """工作流执行逻辑"""
         if self._current_workflow_id is None:
@@ -279,7 +309,6 @@ class WorkflowEngine:
             execution_order = workflow._get_execution_order()
             
             # 重置执行数据
-            workflow._execution_data = {}
             self._execution_results = {}
             
             # 按顺序执行模块
@@ -325,14 +354,13 @@ class WorkflowEngine:
                 # 准备输入数据
                 inputs = {}
                 for port_id, port in module.input_ports.items():
-                    for source_port_id in port.connected_to:
-                        # 查找连接到此输入端口的输出端口
-                        for conn in workflow._connections.values():
-                            if conn.target_port_id == port_id and conn.source_port_id == source_port_id:
-                                # 获取源模块的输出数据
-                                source_module_id = conn.source_module_id
-                                if source_module_id in workflow._execution_data and source_port_id in workflow._execution_data[source_module_id]:
-                                    inputs[port_id] = workflow._execution_data[source_module_id][source_port_id]
+                    # 查找连接的数据源
+                    source_data = self._get_source_data(workflow, module_id, port_id)
+                    if source_data is not None:
+                        inputs[port_id] = source_data
+                
+                # 记录输入数据日志
+                glogger.info(f"模块 '{module.name}' 的输入数据: {inputs}")
                 
                 # 执行模块
                 module._execution_status = "running"
@@ -341,7 +369,10 @@ class WorkflowEngine:
                     module._execution_status = "completed"
                     
                     # 存储输出数据
-                    workflow._execution_data[module_id] = outputs
+                    self._execution_results[module_id] = outputs
+                    
+                    # 记录输出数据日志
+                    glogger.info(f"模块 '{module.name}' 的输出数据: {outputs}")
                     
                     # 通知模块执行完成
                     self._notify_progress(ProgressCallbackType.MODULE_COMPLETE, {
@@ -376,9 +407,6 @@ class WorkflowEngine:
                     })
                     
                     return
-            
-            # 保存执行结果
-            self._execution_results = workflow._execution_data
             
             # 更新状态
             self._execution_status = ExecutionStatus.COMPLETED
