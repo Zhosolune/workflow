@@ -70,14 +70,15 @@ def create_example_workflow() -> Workflow:
     text_proc = TextProcessingModule("文本处理")
     text_proc.set_parameter("operation", "uppercase")
     
-    # 添加模块到工作流
+    # 添加模块到工作流 - 注意顺序很重要
+    # 确保条件判断模块先于文本处理模块添加，以保证正确的执行顺序
     workflow.add_module(num_gen1)
     workflow.add_module(num_gen2)
-    workflow.add_module(math_op)
     workflow.add_module(threshold_gen)
+    workflow.add_module(math_op)
     workflow.add_module(condition)
     workflow.add_module(delay)
-    workflow.add_module(text_proc)
+    workflow.add_module(text_proc)  # 确保文本处理在条件判断之后
     
     # 设置模块位置（用于UI显示）
     num_gen1.position = (100, 100)
@@ -88,35 +89,142 @@ def create_example_workflow() -> Workflow:
     delay.position = (700, 100)
     text_proc.position = (700, 250)
     
+    # 重建所有连接，确保ID一致性
+    # 输出所有模块端口的ID信息
+    print("\n模块输入/输出端口信息:")
+    
+    print(f"随机数生成器1 输出端口:")
+    for port_id, port in num_gen1.output_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"随机数生成器2 输出端口:")
+    for port_id, port in num_gen2.output_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"加法运算 输入端口:")
+    for port_id, port in math_op.input_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"加法运算 输出端口:")
+    for port_id, port in math_op.output_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"条件判断 输入端口:")
+    for port_id, port in condition.input_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"条件判断 输出端口:")
+    for port_id, port in condition.output_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"文本处理 输入端口:")
+    for port_id, port in text_proc.input_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
+    print(f"延迟模块 输入端口:")
+    for port_id, port in delay.input_ports.items():
+        print(f"  - {port.name}: {port_id}")
+    
     # 1. 将随机数生成器1连接到加法运算的第一个输入
-    num1_port_id = list(num_gen1.output_ports.keys())[0]
-    math_in1_port_id = list(math_op.input_ports.keys())[0]
-    workflow.connect(num_gen1.id, num1_port_id, math_op.id, math_in1_port_id)
+    num1_out_port_id = None
+    for port_id, port in num_gen1.output_ports.items():
+        if port.name == "number":
+            num1_out_port_id = port_id
+            break
+    
+    math_in1_port_id = None
+    for port_id, port in math_op.input_ports.items():
+        if port.name == "number1":
+            math_in1_port_id = port_id
+            break
+    
+    workflow.connect(num_gen1.id, num1_out_port_id, math_op.id, math_in1_port_id)
     
     # 2. 将随机数生成器2连接到加法运算的第二个输入
-    num2_port_id = list(num_gen2.output_ports.keys())[0]
-    math_in2_port_id = list(math_op.input_ports.keys())[1]
-    workflow.connect(num_gen2.id, num2_port_id, math_op.id, math_in2_port_id)
+    num2_out_port_id = None
+    for port_id, port in num_gen2.output_ports.items():
+        if port.name == "number":
+            num2_out_port_id = port_id
+            break
+    
+    math_in2_port_id = None
+    for port_id, port in math_op.input_ports.items():
+        if port.name == "number2":
+            math_in2_port_id = port_id
+            break
+    
+    workflow.connect(num_gen2.id, num2_out_port_id, math_op.id, math_in2_port_id)
     
     # 3. 将加法结果连接到条件判断的值输入
-    math_out_port_id = list(math_op.output_ports.keys())[0]
-    cond_val_port_id = list(condition.input_ports.keys())[0]
+    math_out_port_id = None
+    for port_id, port in math_op.output_ports.items():
+        if port.name == "result":
+            math_out_port_id = port_id
+            break
+    
+    cond_val_port_id = None
+    for port_id, port in condition.input_ports.items():
+        if port.name == "value":
+            cond_val_port_id = port_id
+            break
+    
     workflow.connect(math_op.id, math_out_port_id, condition.id, cond_val_port_id)
     
     # 4. 将阈值生成器连接到条件判断的阈值输入
-    threshold_port_id = list(threshold_gen.output_ports.keys())[0]
-    cond_threshold_port_id = list(condition.input_ports.keys())[1]
-    workflow.connect(threshold_gen.id, threshold_port_id, condition.id, cond_threshold_port_id)
+    threshold_out_port_id = None
+    for port_id, port in threshold_gen.output_ports.items():
+        if port.name == "number":
+            threshold_out_port_id = port_id
+            break
+    
+    cond_threshold_port_id = None
+    for port_id, port in condition.input_ports.items():
+        if port.name == "threshold":
+            cond_threshold_port_id = port_id
+            break
+    
+    workflow.connect(threshold_gen.id, threshold_out_port_id, condition.id, cond_threshold_port_id)
     
     # 5. 将条件判断的true结果连接到延迟模块
-    cond_true_port_id = list(condition.output_ports.keys())[0]
-    delay_in_port_id = list(delay.input_ports.keys())[0]
+    cond_true_port_id = None
+    for port_id, port in condition.output_ports.items():
+        if port.name == "true_result":
+            cond_true_port_id = port_id
+            break
+    
+    delay_in_port_id = None
+    for port_id, port in delay.input_ports.items():
+        if port.name == "input":
+            delay_in_port_id = port_id
+            break
+    
     workflow.connect(condition.id, cond_true_port_id, delay.id, delay_in_port_id)
     
     # 6. 将条件判断的false结果连接到文本处理模块
-    cond_false_port_id = list(condition.output_ports.keys())[1]
-    text_in_port_id = list(text_proc.input_ports.keys())[0]
-    workflow.connect(condition.id, cond_false_port_id, text_proc.id, text_in_port_id)
+    cond_false_port_id = None
+    for port_id, port in condition.output_ports.items():
+        if port.name == "false_result":
+            cond_false_port_id = port_id
+            break
+    
+    text_in_port_id = None
+    for port_id, port in text_proc.input_ports.items():
+        if port.name == "text":
+            text_in_port_id = port_id
+            break
+    
+    # 确保连接存在
+    if cond_false_port_id and text_in_port_id:
+        print(f"\n添加条件判断false_result到文本处理的连接:")
+        print(f"  - 源模块: {condition.name}, 端口: false_result ({cond_false_port_id})")
+        print(f"  - 目标模块: {text_proc.name}, 端口: text ({text_in_port_id})")
+        workflow.connect(condition.id, cond_false_port_id, text_proc.id, text_in_port_id)
+    else:
+        print(f"\n错误: 无法创建条件判断到文本处理的连接，端口ID缺失")
+        if not cond_false_port_id:
+            print(f"  - 条件判断模块缺少false_result端口")
+        if not text_in_port_id:
+            print(f"  - 文本处理模块缺少text端口")
     
     # 打印连接详情以便调试
     print("\n详细连接信息:")

@@ -186,39 +186,64 @@ class TextProcessingModule(BaseModule):
         # 记录输入数据用于调试
         glogger.info(f"文本处理模块收到的输入数据: {inputs}")
         
+        # 获取输入端口ID和名称
+        input_port_id = list(self.input_ports.keys())[0]
+        input_port_name = self.input_ports[input_port_id].name
+        glogger.info(f"文本处理模块的输入端口: {input_port_name} (ID: {input_port_id})")
+        
         # 获取输入
-        text_port_id = list(self.input_ports.keys())[0]
-        text = inputs.get(text_port_id, "")
+        text = inputs.get(input_port_id)
+        glogger.info(f"文本处理模块从输入端口获取到数据: {text}")
         
         # 处理数据类型
         if text is None:
+            glogger.warning("文本处理模块收到的输入为None，使用空字符串")
             text = ""
         
         # 特殊处理条件判断输出
         if isinstance(text, dict):
+            glogger.info(f"文本处理模块收到字典类型输入，尝试提取文本内容: {text}")
+            
             # 检查是否直接收到条件模块的完整输出
             if "true_result" in text and "false_result" in text:
                 # 优先使用false_result（假设条件模块的false分支连接到此）
                 if text["false_result"] is not None:
+                    glogger.info(f"提取条件判断的false_result: {text['false_result']}")
                     text = text["false_result"]
                 # 如果false_result为None，尝试使用true_result
                 elif text["true_result"] is not None:
+                    glogger.info(f"提取条件判断的true_result: {text['true_result']}")
                     text = text["true_result"]
+                else:
+                    glogger.warning("条件判断的true_result和false_result都为None")
+                    text = ""
             # 从条件判断的false_result中获取数据
             elif "false_result" in text:
+                glogger.info(f"提取false_result: {text['false_result']}")
                 text = text["false_result"]
             # 从条件判断的true_result中获取数据
             elif "true_result" in text:
+                glogger.info(f"提取true_result: {text['true_result']}")
                 text = text["true_result"]
             # 尝试从number字段获取数据
             elif "number" in text:
+                glogger.info(f"提取number: {text['number']}")
                 text = text["number"]
             # 尝试从result字段获取数据
             elif "result" in text:
+                glogger.info(f"提取result: {text['result']}")
                 text = text["result"]
+            # 尝试从output字段获取数据
+            elif "output" in text:
+                glogger.info(f"提取output: {text['output']}")
+                text = text["output"]
+            else:
+                glogger.warning(f"无法从字典中提取有用数据: {text}")
+                text = str(text)
         
         # 处理复杂类型
         if not isinstance(text, (str, int, float)):
+            glogger.info(f"转换复杂类型为字符串: {text}")
             text = str(text)
         
         glogger.info(f"文本处理使用的值: text={text}")
