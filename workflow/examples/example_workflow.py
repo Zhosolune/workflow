@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core.base_module import BaseModule
 from core.workflow import Workflow
 from core.module_registry import ModuleRegistry, gmodule_registry
-from core.engine import WorkflowEngine
+from core.engine import WorkflowEngine, ProgressCallbackType
 
 from examples.example_modules import (
     NumberGeneratorModule,
@@ -21,21 +21,21 @@ from examples.example_modules import (
 
 def print_callback(event_type: str, event_data: Dict[str, Any]) -> None:
     """打印工作流执行进度的回调函数"""
-    if event_type == "start":
+    if event_type == ProgressCallbackType.START:
         print(f"开始执行工作流: {event_data['workflow_name']}")
-    elif event_type == "module_start":
+    elif event_type == ProgressCallbackType.MODULE_START:
         print(f"开始执行模块: {event_data['module_name']}")
-    elif event_type == "module_complete":
+    elif event_type == ProgressCallbackType.MODULE_COMPLETE:
         print(f"模块 {event_data['module_name']} 执行完成，输出: {event_data['outputs']}")
-    elif event_type == "module_error":
+    elif event_type == ProgressCallbackType.MODULE_ERROR:
         print(f"模块 {event_data['module_name']} 执行错误: {event_data['error']}")
-    elif event_type == "pause":
+    elif event_type == ProgressCallbackType.PAUSE:
         print("工作流执行暂停")
-    elif event_type == "resume":
+    elif event_type == ProgressCallbackType.RESUME:
         print("工作流执行恢复")
-    elif event_type == "complete":
+    elif event_type == ProgressCallbackType.COMPLETE:
         print("工作流执行完成")
-    elif event_type == "error":
+    elif event_type == ProgressCallbackType.ERROR:
         print(f"工作流执行错误: {event_data['error']}")
 
 
@@ -70,11 +70,6 @@ def create_example_workflow() -> Workflow:
     text_proc = TextProcessingModule("文本处理")
     text_proc.set_parameter("operation", "uppercase")
     
-    # 为文本处理模块提供默认输入
-    text_input = NumberGeneratorModule("文本默认输入")
-    text_input.set_parameter("min_value", 123)
-    text_input.set_parameter("max_value", 123)  # 固定值
-    
     # 添加模块到工作流
     workflow.add_module(num_gen1)
     workflow.add_module(num_gen2)
@@ -83,7 +78,6 @@ def create_example_workflow() -> Workflow:
     workflow.add_module(condition)
     workflow.add_module(delay)
     workflow.add_module(text_proc)
-    workflow.add_module(text_input)
     
     # 设置模块位置（用于UI显示）
     num_gen1.position = (100, 100)
@@ -93,48 +87,43 @@ def create_example_workflow() -> Workflow:
     condition.position = (500, 175)
     delay.position = (700, 100)
     text_proc.position = (700, 250)
-    text_input.position = (500, 325)
     
-    # 连接模块
-    # 将随机数生成器连接到加法运算
-    workflow.connect(
-        num_gen1.id, list(num_gen1.output_ports.keys())[0],
-        math_op.id, list(math_op.input_ports.keys())[0]
-    )
-    workflow.connect(
-        num_gen2.id, list(num_gen2.output_ports.keys())[0],
-        math_op.id, list(math_op.input_ports.keys())[1]
-    )
+    # 1. 将随机数生成器1连接到加法运算的第一个输入
+    num1_port_id = list(num_gen1.output_ports.keys())[0]
+    math_in1_port_id = list(math_op.input_ports.keys())[0]
+    workflow.connect(num_gen1.id, num1_port_id, math_op.id, math_in1_port_id)
     
-    # 将加法结果连接到条件判断
-    workflow.connect(
-        math_op.id, list(math_op.output_ports.keys())[0],
-        condition.id, list(condition.input_ports.keys())[0]
-    )
+    # 2. 将随机数生成器2连接到加法运算的第二个输入
+    num2_port_id = list(num_gen2.output_ports.keys())[0]
+    math_in2_port_id = list(math_op.input_ports.keys())[1]
+    workflow.connect(num_gen2.id, num2_port_id, math_op.id, math_in2_port_id)
     
-    # 将阈值生成器连接到条件判断
-    workflow.connect(
-        threshold_gen.id, list(threshold_gen.output_ports.keys())[0],
-        condition.id, list(condition.input_ports.keys())[1]
-    )
+    # 3. 将加法结果连接到条件判断的值输入
+    math_out_port_id = list(math_op.output_ports.keys())[0]
+    cond_val_port_id = list(condition.input_ports.keys())[0]
+    workflow.connect(math_op.id, math_out_port_id, condition.id, cond_val_port_id)
     
-    # 将条件判断结果连接到后续模块
-    workflow.connect(
-        condition.id, list(condition.output_ports.keys())[0],  # true_result
-        delay.id, list(delay.input_ports.keys())[0]
-    )
+    # 4. 将阈值生成器连接到条件判断的阈值输入
+    threshold_port_id = list(threshold_gen.output_ports.keys())[0]
+    cond_threshold_port_id = list(condition.input_ports.keys())[1]
+    workflow.connect(threshold_gen.id, threshold_port_id, condition.id, cond_threshold_port_id)
     
-    # 为文本处理模块提供输入
-    workflow.connect(
-        text_input.id, list(text_input.output_ports.keys())[0],
-        text_proc.id, list(text_proc.input_ports.keys())[0]
-    )
+    # 5. 将条件判断的true结果连接到延迟模块
+    cond_true_port_id = list(condition.output_ports.keys())[0]
+    delay_in_port_id = list(delay.input_ports.keys())[0]
+    workflow.connect(condition.id, cond_true_port_id, delay.id, delay_in_port_id)
     
-    # 将条件判断的false结果连接到后续模块
-    workflow.connect(
-        condition.id, list(condition.output_ports.keys())[1],  # false_result
-        text_proc.id, list(text_proc.input_ports.keys())[0]
-    )
+    # 6. 将条件判断的false结果连接到文本处理模块
+    cond_false_port_id = list(condition.output_ports.keys())[1]
+    text_in_port_id = list(text_proc.input_ports.keys())[0]
+    workflow.connect(condition.id, cond_false_port_id, text_proc.id, text_in_port_id)
+    
+    # 7. 记录所有连接的信息，用于调试
+    print("工作流连接信息:")
+    for conn_id, conn in workflow._connections.items():
+        source_module = workflow._modules[conn.source_module_id].name
+        target_module = workflow._modules[conn.target_module_id].name
+        print(f"连接: {source_module} -> {target_module}")
     
     return workflow
 
@@ -161,7 +150,7 @@ def main():
     # 创建示例工作流
     workflow = create_example_workflow()
     
-    print(f"创建的工作流: {workflow.name}\n")
+    print(f"\n创建的工作流: {workflow.name}")
     print(f"工作流中的模块数量: {len(workflow.modules)}")
     print(f"工作流中的连接数量: {len(workflow.connections)}")
     

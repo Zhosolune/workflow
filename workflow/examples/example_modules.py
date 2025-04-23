@@ -183,21 +183,37 @@ class TextProcessingModule(BaseModule):
     
     def execute(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         """执行模块逻辑，处理文本"""
+        # 记录输入数据用于调试
+        glogger.info(f"文本处理模块收到的输入数据: {inputs}")
+        
         # 获取输入
         text_port_id = list(self.input_ports.keys())[0]
         text = inputs.get(text_port_id, "")
         
-        # 处理数字输入
-        if isinstance(text, (int, float)):
-            text = str(text)
-        
-        # 处理字典输入
-        if isinstance(text, dict) and "number" in text:
-            text = str(text["number"])
-            
-        # 处理空输入
+        # 处理数据类型
         if text is None:
             text = ""
+        
+        # 特殊处理条件判断输出
+        if isinstance(text, dict):
+            # 从条件判断的false_result中获取数据
+            if "false_result" in text:
+                text = text["false_result"]
+            # 从条件判断的true_result中获取数据
+            elif "true_result" in text:
+                text = text["true_result"]
+            # 尝试从number字段获取数据
+            elif "number" in text:
+                text = text["number"]
+            # 尝试从result字段获取数据
+            elif "result" in text:
+                text = text["result"]
+        
+        # 处理复杂类型
+        if not isinstance(text, (str, int, float)):
+            text = str(text)
+        
+        glogger.info(f"文本处理使用的值: text={text}")
         
         # 获取操作类型
         operation = self.get_parameter("operation")
@@ -214,6 +230,8 @@ class TextProcessingModule(BaseModule):
             result = str(len(str(text)))
         else:
             raise ValueError(f"不支持的操作类型: {operation}")
+        
+        glogger.info(f"文本处理结果: {result}")
         
         # 返回结果
         return {"result": result}
@@ -363,12 +381,26 @@ class TimeDelayModule(BaseModule):
     
     def execute(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         """执行模块逻辑，延迟指定时间"""
+        # 记录输入数据用于调试
+        glogger.info(f"延迟模块收到的输入数据: {inputs}")
+        
         # 获取输入
         input_port_id = list(self.input_ports.keys())[0]
         input_value = inputs.get(input_port_id)
         
+        # 特殊处理条件判断输出
+        if isinstance(input_value, dict):
+            # 从条件判断的true_result中获取数据
+            if "true_result" in input_value:
+                input_value = input_value["true_result"]
+            # 从条件判断的false_result中获取数据
+            elif "false_result" in input_value:
+                input_value = input_value["false_result"]
+        
         # 获取延迟时间
         delay_seconds = self.get_parameter("delay_seconds")
+        
+        glogger.info(f"延迟模块执行延迟: {delay_seconds}秒，值: {input_value}")
         
         # 执行延迟
         time.sleep(delay_seconds)
