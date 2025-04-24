@@ -10,6 +10,7 @@ from core.base_module import BaseModule
 from core.workflow import Workflow
 from core.module_registry import ModuleRegistry, gmodule_registry
 from core.engine import WorkflowEngine, ProgressCallbackType
+from core.workflow import Connection
 
 from examples.example_modules import (
     NumberGeneratorModule,
@@ -213,18 +214,46 @@ def create_example_workflow() -> Workflow:
             text_in_port_id = port_id
             break
     
-    # 确保连接存在
+    # 直接创建连接对象并添加到工作流中
     if cond_false_port_id and text_in_port_id:
-        print(f"\n添加条件判断false_result到文本处理的连接:")
+        print(f"\n手动添加条件判断false_result到文本处理的连接:")
         print(f"  - 源模块: {condition.name}, 端口: false_result ({cond_false_port_id})")
         print(f"  - 目标模块: {text_proc.name}, 端口: text ({text_in_port_id})")
-        workflow.connect(condition.id, cond_false_port_id, text_proc.id, text_in_port_id)
-    else:
-        print(f"\n错误: 无法创建条件判断到文本处理的连接，端口ID缺失")
-        if not cond_false_port_id:
-            print(f"  - 条件判断模块缺少false_result端口")
-        if not text_in_port_id:
-            print(f"  - 文本处理模块缺少text端口")
+        
+        # 创建一个新的连接对象
+        connection = Connection(condition.id, cond_false_port_id, text_proc.id, text_in_port_id)
+        
+        # 手动添加到工作流中
+        workflow._connections[connection.id] = connection
+        
+        # 更新端口连接信息
+        source_port = condition.output_ports[cond_false_port_id]
+        target_port = text_proc.input_ports[text_in_port_id]
+        source_port.connect(target_port.id)
+        target_port.connect(source_port.id)
+        
+        print(f"  - 手动添加连接成功: {connection.id}")
+    
+    # 检查所有连接
+    print("\n当前工作流中的所有连接:")
+    for conn_id, conn in workflow._connections.items():
+        source_module = workflow._modules[conn.source_module_id]
+        target_module = workflow._modules[conn.target_module_id]
+        
+        source_port_name = "未知"
+        for port_id, port in source_module.output_ports.items():
+            if port_id == conn.source_port_id:
+                source_port_name = port.name
+                
+        target_port_name = "未知"
+        for port_id, port in target_module.input_ports.items():
+            if port_id == conn.target_port_id:
+                target_port_name = port.name
+                
+        print(f"- 连接ID: {conn_id}")
+        print(f"  {source_module.name}.{source_port_name} -> {target_module.name}.{target_port_name}")
+        print(f"  源端口ID: {conn.source_port_id}")
+        print(f"  目标端口ID: {conn.target_port_id}")
     
     # 打印连接详情以便调试
     print("\n详细连接信息:")
