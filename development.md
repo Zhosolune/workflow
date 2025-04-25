@@ -48,6 +48,11 @@
 - 基础模块注册和管理
 - 工作流执行引擎
 - 示例模块和工作流
+**技术栈概述**:
+- 前端: React + React-flow + ECharts + Ant Design
+- 后端: Python + FastAPI(可选)
+- 桌面封装: Tauri(Rust)
+- 通信: IPC + REST API
 
 ## 项目目录结构
 
@@ -329,6 +334,56 @@ result = writer.execute({"content": "Hello World", "file_path": "output.txt"})  
 
 **版本兼容性**:
 初始版本，无兼容性问题。
+
+### 2023-06-20: 技术栈确定
+
+**主要变更**:
+- 确定前端技术栈: React + React-flow + ECharts + Ant Design
+- 确定后端技术栈: Python + FastAPI(可选)
+- 确定桌面封装方案: Tauri(Rust)
+- 设计通信架构: 混合IPC和REST API模式
+
+**变更原因**:
+为项目确定合适的技术栈，平衡开发效率和运行性能。
+
+**版本兼容性**:
+技术栈选择不影响当前核心组件兼容性。
+
+## 技术栈
+
+### 系统架构
+
+项目采用前后端分离架构，结合桌面应用封装，提供灵活的部署和使用方式。
+
+### 前端技术
+
+- **核心框架**: React
+- **工作流交互**: React-flow
+- **数据可视化**: ECharts
+- **UI组件库**: Ant Design
+
+### 后端技术
+
+- **核心语言**: Python
+- **API框架**: FastAPI（可选）
+- **桌面端封装**: Tauri（轻量级Rust框架）
+
+### 通信方式
+
+- **混合模式**:
+  - **高频调用**: IPC（进程间通信）
+    - 需要少量Rust胶水代码
+    - 前端通过`std process Command`调用Python脚本
+    - 性能更优
+  - **复杂逻辑**: FastAPI
+    - 不需要Rust代码
+    - 需处理服务生命周期管理
+
+### 调试工具
+
+- **前端调试**: Chrome DevTools（`chrome://inspect`）
+- **Rust调试**: VS Code + Rust Analyzer
+- **Python调试**: PyCharm/VS Code 断点调试
 
 ## 计划开发功能
 

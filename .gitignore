@@ -1,59 +1,56 @@
-# 构建输出
-dist/
-.cache/
-
-# 依赖
+# 前端相关忽略项
 node_modules/
-
-# 日志文件
+dist/
+dist-ssr/
+*.local
+.env
+coverage/
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+.eslintcache
 
-# 编辑器文件
+# Tauri/Rust相关忽略项
+src-tauri/target/
+src-tauri/Cargo.lock
+src-tauri/WixTools/
+src-tauri/gen/
+
+# Python后端相关忽略项
+*.py[cod]
+*$py.class
+__pycache__/
+*.so
+.Python
+venv/
+env/
+.venv/
+.env/
+*.egg-info/
+*.egg
+
+# 系统相关忽略项
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE和编辑器相关忽略项
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
+.project
+.classpath
+.settings/
 
-# 操作系统相关
-.DS_Store
-Thumbs.db 
+# 杂项
+.log/
+.cache/
+.tmp/
 
-# 临时文件
-*.tmp
-*.tmp.*
-*.tmp.*.*
-*.tmp.*.*.*
-*.tmp.*.*.*.*
-
-# 系统文件
-.env
-.env.*
-.env.*.*
-.env.*.*.*
-.env.*.*.*.*
-
-# 配置文件
-config.json
-config.json.*
-config.json.*.*
-config.json.*.*.*
-config.json.*.*.*.*
-
-# 缓存文件
-*.cache
-*.cache.*
-*.cache.*.*
-*.cache.*.*.*
-*.cache.*.*.*.*
-
-# python缓存文件
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.pyw
-*.pyz
-
-
+# 其他
+development.md
